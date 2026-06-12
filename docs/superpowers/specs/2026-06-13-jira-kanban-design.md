@@ -10,19 +10,19 @@ A Jira-style project tracker: multiple boards, each with fixed To Do / In Progre
 
 ## 2. Tech Stack
 
-| Concern | Choice | Notes |
-|---|---|---|
-| Framework | Next.js 15 (App Router), latest stable | React 19; all target patterns identical to the Next 14 brief |
-| Language | TypeScript (strict) | |
-| Styling | Tailwind CSS + next-themes | `darkMode: 'class'`; every component themed from day one |
-| Components | Storybook | All `components/ui` primitives built in isolation first |
-| Database | PostgreSQL via Docker Compose (local dev + CI) | Production database deferred to deploy phase (likely Neon) |
-| ORM | Prisma | |
-| Auth | Auth.js (NextAuth) v5, Credentials provider | JWT session cookies; bcrypt password hashing |
-| Drag & drop | @hello-pangea/dnd | Maintained React 18/19 fork; react-beautiful-dnd is archived |
-| Validation | Zod | Single schema source shared by client forms and Server Actions |
-| Testing | Jest + React Testing Library | Unit + component tests only; no E2E runner |
-| CI/CD | GitHub Actions; Vercel at deploy phase | |
+| Concern     | Choice                                         | Notes                                                          |
+| ----------- | ---------------------------------------------- | -------------------------------------------------------------- |
+| Framework   | Next.js 15 (App Router), latest stable         | React 19; all target patterns identical to the Next 14 brief   |
+| Language    | TypeScript (strict)                            |                                                                |
+| Styling     | Tailwind CSS + next-themes                     | `darkMode: 'class'`; every component themed from day one       |
+| Components  | Storybook                                      | All `components/ui` primitives built in isolation first        |
+| Database    | PostgreSQL via Docker Compose (local dev + CI) | Production database deferred to deploy phase (likely Neon)     |
+| ORM         | Prisma                                         |                                                                |
+| Auth        | Auth.js (NextAuth) v5, Credentials provider    | JWT session cookies; bcrypt password hashing                   |
+| Drag & drop | @hello-pangea/dnd                              | Maintained React 18/19 fork; react-beautiful-dnd is archived   |
+| Validation  | Zod                                            | Single schema source shared by client forms and Server Actions |
+| Testing     | Jest + React Testing Library                   | Unit + component tests only; no E2E runner                     |
+| CI/CD       | GitHub Actions; Vercel at deploy phase         |                                                                |
 
 ## 3. Architecture: Server-First + Server Actions
 
@@ -116,6 +116,7 @@ prisma/         schema.prisma, migrations/, seed.ts
 ```
 
 **Boundary rules:**
+
 - `components/` never imports Prisma; only Server Components in `app/` and `lib/dal/` touch the database.
 - Zod schemas live only in `schemas/` and validate on both client and server.
 - `config/` is data, not JSX — adding a nav item is a one-line config change.
@@ -131,6 +132,7 @@ prisma/         schema.prisma, migrations/, seed.ts
 ## 7. Error Handling
 
 Three layers:
+
 1. **Zod at the boundary** — malformed input rejected with field-level messages, surfaced via `useActionState`.
 2. **Typed action results** — Server Actions return `{ ok: true, data } | { ok: false, error }` rather than throwing (thrown action errors leak poorly to the client).
 3. **Route-level `error.tsx`** boundaries catch anything unexpected, with a retry button.
@@ -146,6 +148,7 @@ Optimistic drag-and-drop failures auto-revert to the last confirmed server state
 ## 9. Testing
 
 Jest + React Testing Library, chosen for value-per-test:
+
 - **Zod schemas** — pure, fast, catch contract drift between forms and actions.
 - **UI primitives** — render + interaction tests.
 - **Optimistic board reducer** — a pure function and the most logic-dense code in the app; thoroughly unit-tested (move within column, across columns, revert).

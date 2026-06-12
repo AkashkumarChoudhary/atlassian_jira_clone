@@ -11,6 +11,7 @@
 **Spec:** `docs/superpowers/specs/2026-06-13-jira-kanban-design.md` (sections 2, 4, 10, 11 — phases 1 & 2). Later phases (auth, shell, board, tickets, rich features, deploy) get their own plans.
 
 **Conventions for this plan:**
+
 - All commands run from the repo root `/home/akashkumarchoudhary/Videos/jira` unless noted.
 - Inside `src/`, modules import each other with **relative paths** (not the `@/` alias) when they are also consumed by `tsx`-run scripts (seed, check scripts) — `tsx` does not resolve the alias. App code in `app/` may use `@/`.
 - Commit after every task. Never commit `.env`.
@@ -22,9 +23,10 @@
 The repo already contains `docs/` and `.git`. `create-next-app` refuses to scaffold into a directory with unknown files, so move `docs/` aside first.
 
 **Files:**
+
 - Create: entire Next.js scaffold (`package.json`, `src/app/*`, `eslint.config.mjs`, `tsconfig.json`, `next.config.ts`, …)
 
-- [ ] **Step 1: Move docs aside and scaffold**
+- [x] **Step 1: Move docs aside and scaffold**
 
 ```bash
 mv docs /tmp/jira-docs-keep
@@ -34,11 +36,11 @@ mv /tmp/jira-docs-keep docs
 
 If `create-next-app` asks anything the flags didn't cover (e.g. Turbopack), accept the default. Note the Next.js version it prints — latest stable is what the spec wants.
 
-- [ ] **Step 2: Verify the dev server boots**
+- [x] **Step 2: Verify the dev server boots**
 
 Run: `npm run dev` — open http://localhost:3000, expect the Next.js starter page. Stop with Ctrl-C.
 
-- [ ] **Step 3: Verify scaffold scripts pass**
+- [x] **Step 3: Verify scaffold scripts pass**
 
 ```bash
 npm run lint
@@ -47,7 +49,7 @@ npm run build
 
 Expected: both exit 0.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A
@@ -59,6 +61,7 @@ git commit -m "chore: scaffold Next.js app with TypeScript, Tailwind, ESLint"
 ### Task 2: Prettier and a typecheck script
 
 **Files:**
+
 - Create: `.prettierrc`, `.prettierignore`
 - Modify: `package.json` (scripts)
 
@@ -117,6 +120,7 @@ git commit -m "chore: add prettier and typecheck script"
 ### Task 3: Docker Postgres and env files
 
 **Files:**
+
 - Create: `docker-compose.yml`, `.env`, `.env.example`
 - Modify: `package.json` (scripts), possibly `.gitignore`
 
@@ -182,6 +186,7 @@ git commit -m "chore: add dockerized postgres and env scaffolding"
 ### Task 4: Jest + React Testing Library
 
 **Files:**
+
 - Create: `jest.config.mjs`, `jest.setup.ts`, `src/__tests__/toolchain.test.tsx`
 - Modify: `package.json` (scripts)
 
@@ -236,7 +241,9 @@ function Hello() {
 
 test('jest, jsdom, RTL and jest-dom are wired up', () => {
   render(<Hello />)
-  expect(screen.getByRole('heading', { name: 'Hello Jira' })).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', { name: 'Hello Jira' }),
+  ).toBeInTheDocument()
 })
 ```
 
@@ -259,6 +266,7 @@ git commit -m "test: set up jest and react-testing-library with smoke test"
 The Postgres service is added in Task 11, after the schema exists.
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Create `.github/workflows/ci.yml`**
@@ -311,6 +319,7 @@ git commit -m "ci: add lint/typecheck/test/build workflow"
 ### Task 6: Prisma schema and first migration
 
 **Files:**
+
 - Create: `prisma/schema.prisma`, `prisma/migrations/*` (generated)
 - Modify: `package.json` (postinstall script)
 
@@ -452,6 +461,7 @@ git commit -m "feat: add prisma schema and initial migration"
 ### Task 7: Prisma client singleton
 
 **Files:**
+
 - Create: `src/lib/prisma.ts`
 
 - [ ] **Step 1: Create `src/lib/prisma.ts`**
@@ -487,6 +497,7 @@ git commit -m "feat: add prisma client singleton"
 Pure functions used by the seed script now and by the create-ticket Server Action in a later phase. Spec rule: a board's default prefix comes from the first letters of its name (uppercase, max 5 chars); single-word names use the first 3 letters.
 
 **Files:**
+
 - Test: `src/lib/__tests__/ticket-key.test.ts`
 - Create: `src/lib/ticket-key.ts`
 
@@ -509,7 +520,9 @@ describe('deriveBoardPrefix', () => {
   })
 
   test('caps the prefix at five characters', () => {
-    expect(deriveBoardPrefix('Big Hairy Audacious Goal Project X')).toBe('BHAGP')
+    expect(deriveBoardPrefix('Big Hairy Audacious Goal Project X')).toBe(
+      'BHAGP',
+    )
   })
 
   test('ignores surrounding and repeated whitespace', () => {
@@ -535,7 +548,9 @@ Expected: FAIL — `Cannot find module '../ticket-key'`.
 export function deriveBoardPrefix(name: string): string {
   const words = name.trim().toUpperCase().split(/\s+/).filter(Boolean)
   const prefix =
-    words.length >= 2 ? words.map((w) => w[0]).join('') : (words[0] ?? '').slice(0, 3)
+    words.length >= 2
+      ? words.map((w) => w[0]).join('')
+      : (words[0] ?? '').slice(0, 3)
   return prefix.slice(0, 5)
 }
 
@@ -563,6 +578,7 @@ git commit -m "feat: add board prefix and ticket key helpers"
 Seeds the spec's demo data: 5 users (including the demo login), 3 boards, 4 labels, epics, ~24 tickets across columns, comments. Idempotent: wipes all rows first, so it can be re-run anytime.
 
 **Files:**
+
 - Create: `prisma/seed.ts`
 - Modify: `package.json` (prisma seed config + dependency)
 
@@ -710,10 +726,16 @@ async function main() {
 
     const epics = []
     for (const e of boardSpec.epics) {
-      epics.push(await prisma.epic.create({ data: { ...e, boardId: board.id } }))
+      epics.push(
+        await prisma.epic.create({ data: { ...e, boardId: board.id } }),
+      )
     }
 
-    const positionByStatus: Record<Status, number> = { TODO: 0, IN_PROGRESS: 0, DONE: 0 }
+    const positionByStatus: Record<Status, number> = {
+      TODO: 0,
+      IN_PROGRESS: 0,
+      DONE: 0,
+    }
     let counter = 0
 
     for (const [title, status, priority, epicIndex] of boardSpec.tickets) {
@@ -728,7 +750,10 @@ async function main() {
           position: positionByStatus[status]++,
           boardId: board.id,
           reporterId: users[ticketCount % users.length].id,
-          assigneeId: ticketCount % 3 === 0 ? null : users[(ticketCount + 1) % users.length].id,
+          assigneeId:
+            ticketCount % 3 === 0
+              ? null
+              : users[(ticketCount + 1) % users.length].id,
           epicId: epicIndex === null ? null : epics[epicIndex].id,
           labels: { connect: [{ id: labels[ticketCount % labels.length].id }] },
         },
@@ -800,6 +825,7 @@ git commit -m "feat: add idempotent seed with demo users, boards and tickets"
 All Prisma queries live here; nothing else in the app touches the client directly. These functions use relative imports so `tsx` scripts can consume them.
 
 **Files:**
+
 - Create: `src/lib/dal/users.ts`, `src/lib/dal/boards.ts`, `scripts/check-dal.ts`
 
 - [ ] **Step 1: Create `src/lib/dal/users.ts`**
@@ -857,7 +883,9 @@ export async function getBoardWithTickets(slug: string) {
   }
 }
 
-export type BoardWithTickets = NonNullable<Awaited<ReturnType<typeof getBoardWithTickets>>>
+export type BoardWithTickets = NonNullable<
+  Awaited<ReturnType<typeof getBoardWithTickets>>
+>
 export type BoardTicket = BoardWithTickets['columns']['TODO'][number]
 ```
 
@@ -926,6 +954,7 @@ git commit -m "feat: add data-access layer with live smoke check"
 ### Task 11: CI runs migrations and seed against real Postgres
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Replace `.github/workflows/ci.yml` with the database-backed version**
