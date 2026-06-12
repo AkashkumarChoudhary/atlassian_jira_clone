@@ -72,7 +72,7 @@ Label   id, name (unique), color   — shared across boards
 Epic    id, name, color, boardId   — scoped to one board
 ```
 
-**Ticket keys:** each board derives a short uppercase prefix from its name; `ticketCounter` increments atomically on ticket creation to produce keys like `WEB-12`.
+**Ticket keys:** each board stores an explicit uppercase `prefix` (2–5 chars, unique), defaulted at creation from the first letters of the board name and editable in seed data; `ticketCounter` increments atomically on ticket creation to produce keys like `WEB-12`.
 
 **Ordering:** `position` is an integer. The `moveTicket(ticketId, newStatus, newIndex)` action rewrites positions for the affected column(s) inside a single Prisma transaction. Chosen over fractional ranking for simplicity at portfolio scale (tens of tickets per column).
 
