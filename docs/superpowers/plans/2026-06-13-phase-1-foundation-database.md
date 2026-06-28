@@ -65,13 +65,13 @@ git commit -m "chore: scaffold Next.js app with TypeScript, Tailwind, ESLint"
 - Create: `.prettierrc`, `.prettierignore`
 - Modify: `package.json` (scripts)
 
-- [ ] **Step 1: Install Prettier with the Tailwind class-sorting plugin**
+- [x] **Step 1: Install Prettier with the Tailwind class-sorting plugin**
 
 ```bash
 npm install -D prettier prettier-plugin-tailwindcss
 ```
 
-- [ ] **Step 2: Create `.prettierrc`**
+- [x] **Step 2: Create `.prettierrc`**
 
 ```json
 {
@@ -81,7 +81,7 @@ npm install -D prettier prettier-plugin-tailwindcss
 }
 ```
 
-- [ ] **Step 3: Create `.prettierignore`**
+- [x] **Step 3: Create `.prettierignore`**
 
 ```
 .next
@@ -89,7 +89,7 @@ node_modules
 package-lock.json
 ```
 
-- [ ] **Step 4: Add scripts to `package.json`**
+- [x] **Step 4: Add scripts to `package.json`**
 
 Add to the `"scripts"` object (keep existing entries):
 
@@ -99,7 +99,7 @@ Add to the `"scripts"` object (keep existing entries):
 "format:check": "prettier --check ."
 ```
 
-- [ ] **Step 5: Format the scaffold and verify**
+- [x] **Step 5: Format the scaffold and verify**
 
 ```bash
 npm run format
@@ -108,7 +108,7 @@ npm run typecheck
 
 Expected: prettier rewrites scaffold files; `tsc` exits 0.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add -A
@@ -124,7 +124,7 @@ git commit -m "chore: add prettier and typecheck script"
 - Create: `docker-compose.yml`, `.env`, `.env.example`
 - Modify: `package.json` (scripts), possibly `.gitignore`
 
-- [ ] **Step 1: Create `docker-compose.yml`**
+- [x] **Step 1: Create `docker-compose.yml`**
 
 ```yaml
 services:
@@ -132,7 +132,7 @@ services:
     image: postgres:16
     restart: unless-stopped
     ports:
-      - '5432:5432'
+      - '5434:5432' # host 5434: 5432/5433 occupied by other local projects
     environment:
       POSTGRES_USER: jira
       POSTGRES_PASSWORD: jira
@@ -144,13 +144,13 @@ volumes:
   pgdata:
 ```
 
-- [ ] **Step 2: Create `.env` and `.env.example`** (identical content for now)
+- [x] **Step 2: Create `.env` and `.env.example`** (identical content for now)
 
 ```
-DATABASE_URL="postgresql://jira:jira@localhost:5432/jira"
+DATABASE_URL="postgresql://jira:jira@localhost:5434/jira"
 ```
 
-- [ ] **Step 3: Ensure `.env` is gitignored but `.env.example` is tracked**
+- [x] **Step 3: Ensure `.env` is gitignored but `.env.example` is tracked**
 
 ```bash
 git check-ignore -q .env || echo ".env" >> .gitignore
@@ -159,13 +159,13 @@ git check-ignore -q .env.example && echo '!.env.example' >> .gitignore || true
 
 Verify: `git status --short` shows `.env.example` as untracked-addable and does NOT show `.env`.
 
-- [ ] **Step 4: Add a convenience script to `package.json`**
+- [x] **Step 4: Add a convenience script to `package.json`**
 
 ```json
 "db:up": "docker compose up -d"
 ```
 
-- [ ] **Step 5: Start the database and verify**
+- [x] **Step 5: Start the database and verify**
 
 ```bash
 npm run db:up
@@ -174,7 +174,7 @@ docker compose exec db pg_isready -U jira
 
 Expected: `accepting connections`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add docker-compose.yml .env.example .gitignore package.json
@@ -190,13 +190,13 @@ git commit -m "chore: add dockerized postgres and env scaffolding"
 - Create: `jest.config.mjs`, `jest.setup.ts`, `src/__tests__/toolchain.test.tsx`
 - Modify: `package.json` (scripts)
 
-- [ ] **Step 1: Install test dependencies**
+- [x] **Step 1: Install test dependencies**
 
 ```bash
 npm install -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event @types/jest
 ```
 
-- [ ] **Step 2: Create `jest.config.mjs`**
+- [x] **Step 2: Create `jest.config.mjs`**
 
 ```js
 import nextJest from 'next/jest.js'
@@ -215,20 +215,20 @@ const config = {
 export default createJestConfig(config)
 ```
 
-- [ ] **Step 3: Create `jest.setup.ts`**
+- [x] **Step 3: Create `jest.setup.ts`**
 
 ```ts
 import '@testing-library/jest-dom'
 ```
 
-- [ ] **Step 4: Add test scripts to `package.json`**
+- [x] **Step 4: Add test scripts to `package.json`**
 
 ```json
 "test": "jest",
 "test:watch": "jest --watch"
 ```
 
-- [ ] **Step 5: Write a toolchain smoke test** — `src/__tests__/toolchain.test.tsx`
+- [x] **Step 5: Write a toolchain smoke test** — `src/__tests__/toolchain.test.tsx`
 
 This permanently guards the Jest + jsdom + RTL + jest-dom wiring:
 
@@ -247,12 +247,12 @@ test('jest, jsdom, RTL and jest-dom are wired up', () => {
 })
 ```
 
-- [ ] **Step 6: Run the test**
+- [x] **Step 6: Run the test**
 
 Run: `npm test`
 Expected: `PASS src/__tests__/toolchain.test.tsx`, 1 passed.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -269,7 +269,7 @@ The Postgres service is added in Task 11, after the schema exists.
 
 - Create: `.github/workflows/ci.yml`
 
-- [ ] **Step 1: Create `.github/workflows/ci.yml`**
+- [x] **Step 1: Create `.github/workflows/ci.yml`**
 
 ```yaml
 name: CI
@@ -295,7 +295,7 @@ jobs:
       - run: npm run build
 ```
 
-- [ ] **Step 2: Verify the same gates locally**
+- [x] **Step 2: Verify the same gates locally**
 
 ```bash
 npm run lint && npm run typecheck && npm test && npm run build
@@ -303,11 +303,11 @@ npm run lint && npm run typecheck && npm test && npm run build
 
 Expected: all four exit 0.
 
-- [ ] **Step 3 (optional, needs GitHub): push and watch the workflow**
+- [x] **Step 3 (optional, needs GitHub): push and watch the workflow**
 
 If a GitHub remote is wanted now: `gh repo create` (interactive), push `main`, and check the Actions tab shows a green run. Otherwise skip — the workflow file is verified by Step 2 plus YAML review, and will run on first push.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .github
