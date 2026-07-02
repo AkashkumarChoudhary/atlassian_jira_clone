@@ -28,7 +28,7 @@ Verified against the actual toolchain (mid-2026):
 - The real `(app)/layout.tsx` shell.
 - Storybook 10 setup with a light/dark decorator.
 
-**Deferred:** the board Kanban UI and drag-and-drop (Phase 5); ticket create/edit + the intercepting-route modal that *consumes* `Modal` (Phase 6); comments/labels/epics (Phase 7). `Modal`/`Badge` are built now as primitives but wired into features later.
+**Deferred:** the board Kanban UI and drag-and-drop (Phase 5); ticket create/edit + the intercepting-route modal that _consumes_ `Modal` (Phase 6); comments/labels/epics (Phase 7). `Modal`/`Badge` are built now as primitives but wired into features later.
 
 ## 4. Components & interfaces
 
