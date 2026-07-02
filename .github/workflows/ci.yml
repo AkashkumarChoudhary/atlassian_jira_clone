@@ -24,6 +24,7 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgresql://jira:jira@localhost:5432/jira
+      SESSION_SECRET: ci-session-secret-not-used-for-real-auth
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
