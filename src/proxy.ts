@@ -21,5 +21,7 @@ export default async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  // Exclude API routes, Next internals, and any file-with-extension (favicon,
+  // icons, images, robots.txt, …) so static assets are served without a redirect.
+  matcher: ['/((?!api|_next/static|_next/image|.*\\..*).*)'],
 }

@@ -2,7 +2,11 @@ import { SignJWT, jwtVerify } from 'jose'
 
 export const SESSION_COOKIE_NAME = 'session'
 
-const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET)
+const secretKey = process.env.SESSION_SECRET
+if (!secretKey) {
+  throw new Error('SESSION_SECRET is not set')
+}
+const encodedKey = new TextEncoder().encode(secretKey)
 
 export type SessionPayload = {
   userId: string

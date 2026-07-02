@@ -6,6 +6,10 @@ import { loginSchema } from '@/schemas/auth'
 import { getUserByEmail } from '@/lib/dal/users'
 import { createSession, deleteSession } from '@/lib/session'
 
+// A fixed hash to compare against when the email is unknown, so login response
+// timing does not reveal whether an account exists (mitigates user enumeration).
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('login-timing-equalizer', 10)
+
 export type LoginState =
   | {
       error?: string
@@ -27,7 +31,11 @@ export async function login(
   }
 
   const user = await getUserByEmail(parsed.data.email)
-  if (!user || !bcrypt.compareSync(parsed.data.password, user.passwordHash)) {
+  const passwordMatches = await bcrypt.compare(
+    parsed.data.password,
+    user?.passwordHash ?? DUMMY_PASSWORD_HASH,
+  )
+  if (!user || !passwordMatches) {
     return { error: 'Invalid email or password.' }
   }
 
