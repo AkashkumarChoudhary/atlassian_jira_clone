@@ -22,7 +22,10 @@ test('rejects an invalid email with the expected message', () => {
 })
 
 test('rejects an empty password with the expected message', () => {
-  const result = loginSchema.safeParse({ email: 'demo@example.com', password: '' })
+  const result = loginSchema.safeParse({
+    email: 'demo@example.com',
+    password: '',
+  })
   expect(result.success).toBe(false)
   if (!result.success) {
     expect(result.error.flatten().fieldErrors.password).toContain(
