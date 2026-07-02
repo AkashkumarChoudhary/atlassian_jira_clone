@@ -74,6 +74,15 @@ test('moves to the end of a column (index === length)', () => {
   expect(ids(next.IN_PROGRESS)).toEqual(['x', 'y', 'a'])
 })
 
+test('clamps an over-length index to the column end', () => {
+  const next = moveTicketInColumns(cols(['a'], ['x'], []), {
+    ticketId: 'a',
+    toStatus: Status.IN_PROGRESS,
+    toIndex: 99,
+  })
+  expect(ids(next.IN_PROGRESS)).toEqual(['x', 'a'])
+})
+
 test('returns the input unchanged for an unknown ticket', () => {
   const input = cols(['a'], [], [])
   const next = moveTicketInColumns(input, {
