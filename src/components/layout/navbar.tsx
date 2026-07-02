@@ -29,7 +29,6 @@ export function Navbar({ user }: { user: NavbarUser }) {
           <form action={logout}>
             <button
               type="submit"
-              role="menuitem"
               className="w-full rounded px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               Log out

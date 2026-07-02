@@ -12,7 +12,7 @@ export default async function AppLayout({
   if (!user) redirect('/login')
 
   return (
-    <div className="flex h-full">
+    <div className="flex min-h-screen">
       <Sidenav />
       <div className="flex flex-1 flex-col">
         <Navbar

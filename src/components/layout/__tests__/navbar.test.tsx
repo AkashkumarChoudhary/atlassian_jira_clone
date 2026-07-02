@@ -24,5 +24,5 @@ test('reveals the user details and a logout control when the menu opens', async 
   render(<Navbar user={user} />)
   await u.click(screen.getByLabelText('Demo User'))
   expect(screen.getByText('demo@example.com')).toBeInTheDocument()
-  expect(screen.getByRole('menuitem', { name: /log out/i })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument()
 })

@@ -36,7 +36,7 @@ export function Dropdown({
     <div ref={ref} className="relative">
       <button
         type="button"
-        aria-haspopup="menu"
+        aria-haspopup="true"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
@@ -44,7 +44,6 @@ export function Dropdown({
       </button>
       {open && (
         <div
-          role="menu"
           className={`absolute z-20 mt-1 min-w-40 rounded-md border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800 ${align === 'right' ? 'right-0' : 'left-0'}`}
         >
           {children}
