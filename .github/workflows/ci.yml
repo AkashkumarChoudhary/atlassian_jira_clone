@@ -8,6 +8,22 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: jira
+          POSTGRES_PASSWORD: jira
+          POSTGRES_DB: jira
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://jira:jira@localhost:5432/jira
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,4 +34,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - run: npx prisma migrate deploy
+      - run: npx prisma db seed
+      - run: npx tsx scripts/check-dal.ts
       - run: npm run build
