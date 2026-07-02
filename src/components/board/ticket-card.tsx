@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { BoardTicket } from '@/lib/dal/boards'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -9,9 +10,18 @@ const priorityColor: Record<string, string> = {
   URGENT: '#ef4444',
 }
 
-export function TicketCard({ ticket }: { ticket: BoardTicket }) {
+export function TicketCard({
+  ticket,
+  slug,
+}: {
+  ticket: BoardTicket
+  slug: string
+}) {
   return (
-    <div className="rounded-md border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <Link
+      href={`/boards/${slug}/${ticket.key}`}
+      className="block rounded-md border border-gray-200 bg-white p-3 shadow-sm hover:border-indigo-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-indigo-500"
+    >
       <div className="mb-2 flex items-center justify-between gap-2">
         <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
           {ticket.key}
@@ -35,6 +45,6 @@ export function TicketCard({ ticket }: { ticket: BoardTicket }) {
           />
         )}
       </div>
-    </div>
+    </Link>
   )
 }

@@ -12,7 +12,7 @@ const ticket = {
 } as unknown as BoardTicket
 
 test('renders the key, title, label and assignee', () => {
-  render(<TicketCard ticket={ticket} />)
+  render(<TicketCard ticket={ticket} slug="website-redesign" />)
   expect(screen.getByText('WR-3')).toBeInTheDocument()
   expect(screen.getByText('Build hero section')).toBeInTheDocument()
   expect(screen.getByText('feature')).toBeInTheDocument()
@@ -21,7 +21,7 @@ test('renders the key, title, label and assignee', () => {
 
 test('renders without an assignee', () => {
   const unassigned = { ...ticket, assignee: null } as unknown as BoardTicket
-  render(<TicketCard ticket={unassigned} />)
+  render(<TicketCard ticket={unassigned} slug="website-redesign" />)
   expect(screen.getByText('WR-3')).toBeInTheDocument()
   expect(screen.queryByLabelText('Ava Patel')).not.toBeInTheDocument()
 })

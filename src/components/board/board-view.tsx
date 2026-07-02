@@ -44,17 +44,17 @@ export function BoardView({ board }: { board: BoardWithTickets }) {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
-        {board.name}
-      </h1>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 overflow-x-auto pb-4">
-          {ORDER.map((status) => (
-            <Column key={status} status={status} tickets={columns[status]} />
-          ))}
-        </div>
-      </DragDropContext>
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="flex flex-1 gap-4 overflow-x-auto pb-4">
+        {ORDER.map((status) => (
+          <Column
+            key={status}
+            status={status}
+            tickets={columns[status]}
+            slug={board.slug}
+          />
+        ))}
+      </div>
+    </DragDropContext>
   )
 }

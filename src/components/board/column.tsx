@@ -15,9 +15,11 @@ const titles: Record<Status, string> = {
 export function Column({
   status,
   tickets,
+  slug,
 }: {
   status: Status
   tickets: BoardTicket[]
+  slug: string
 }) {
   return (
     <div className="flex w-72 shrink-0 flex-col rounded-lg bg-gray-100 p-3 dark:bg-gray-900/40">
@@ -42,7 +44,7 @@ export function Column({
                     {...prov.draggableProps}
                     {...prov.dragHandleProps}
                   >
-                    <TicketCard ticket={ticket} />
+                    <TicketCard ticket={ticket} slug={slug} />
                   </div>
                 )}
               </Draggable>
