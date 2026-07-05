@@ -39,4 +39,5 @@ jobs:
       - run: npx prisma migrate deploy
       - run: npx prisma db seed
       - run: npx tsx scripts/check-dal.ts
+      - run: npx tsx scripts/check-move.ts
       - run: npm run build
