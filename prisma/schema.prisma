@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  passwordHash    String
+  avatarColor     String
+  assignedTickets Ticket[]  @relation("TicketAssignee")
+  reportedTickets Ticket[]  @relation("TicketReporter")
+  comments        Comment[]
+}
+
+model Board {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  prefix        String   @unique
+  description   String?
+  ticketCounter Int      @default(0)
+  tickets       Ticket[]
+  epics         Epic[]
+}
+
+model Ticket {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  title       String
+  description String?
+  status      Status    @default(TODO)
+  priority    Priority  @default(MEDIUM)
+  position    Int
+  board       Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String
+  assignee    User?     @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  assigneeId  String?
+  reporter    User      @relation("TicketReporter", fields: [reporterId], references: [id])
+  reporterId  String
+  epic        Epic?     @relation(fields: [epicId], references: [id])
+  epicId      String?
+  labels      Label[]
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([boardId, status, position])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+}
+
+model Label {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  color   String
+  tickets Ticket[]
+}
+
+model Epic {
+  id      String   @id @default(cuid())
+  name    String
+  color   String
+  board   Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId String
+  tickets Ticket[]
+}
